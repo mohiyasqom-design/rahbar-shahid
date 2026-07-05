@@ -1,0 +1,327 @@
+<!-- ============================================================
+     index.html — آرشیو آثار تشییع رهبر شهید
+     A cinematic digital exhibition — HTML5 / CSS3 / Vanilla JS
+     ============================================================ -->
+<!DOCTYPE html>
+
+<html dir="rtl" lang="fa">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>آرشیو آثار تشییع رهبر شهید | نمایشگاه دیجیتال</title>
+<!-- SEO / Social -->
+<meta content="نمایشگاه دیجیتال و آرشیو هنری آثار تشییع؛ تجربه‌ای سینمایی، موزه‌ای و ماندگار." name="description"/>
+<meta content="آرشیو آثار تشییع رهبر شهید" property="og:title"/>
+<meta content="گالری موزه‌ای آثار هنری — تجربه‌ای سینمایی و تعاملی." property="og:description"/>
+<meta content="website" property="og:type"/>
+<meta content="summary_large_image" name="twitter:card"/>
+<meta content="#0b0b10" name="theme-color"/>
+<!-- Favicon (inline SVG) -->
+<link href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='28' fill='%230b0b10' stroke='%23d4af37' stroke-width='3'/%3E%3Cpath d='M32 14 L36 28 L50 32 L36 36 L32 50 L28 36 L14 32 L28 28 Z' fill='%23d4af37'/%3E%3C/svg%3E" rel="icon"/>
+<!-- Persian typography -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;900&amp;family=Noto+Naskh+Arabic:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="style.css" rel="stylesheet"/>
+</head>
+<body data-theme="dark">
+<!-- ══════════════ CINEMATIC PRELOADER ══════════════ -->
+<div aria-hidden="true" class="preloader" id="preloader">
+<div class="preloader__rays"></div>
+<div class="preloader__emblem">
+<svg aria-hidden="true" class="emblem-svg" viewbox="0 0 120 120">
+<circle class="emblem-ring" cx="60" cy="60" r="52"></circle>
+<circle class="emblem-ring emblem-ring--inner" cx="60" cy="60" r="40"></circle>
+<path class="emblem-star" d="M60 22 L67 50 L95 60 L67 70 L60 98 L53 70 L25 60 L53 50 Z"></path>
+</svg>
+</div>
+<h1 class="preloader__title" data-split="">آرشیو آثار تشییع رهبر شهید</h1>
+<p class="preloader__sub">نمایشگاه دیجیتالِ یک وداع تاریخی</p>
+<div class="preloader__bar"><span id="preloaderBar"></span></div>
+<div class="preloader__percent" id="preloaderPercent">۰٪</div>
+</div>
+<!-- ══════════════ AMBIENT BACKGROUND LAYERS ══════════════ -->
+<div aria-hidden="true" class="bg-layers">
+<div class="bg-gradient"></div>
+<div class="bg-glow bg-glow--a"></div>
+<div class="bg-glow bg-glow--b"></div>
+<canvas id="particles"></canvas>
+<div class="bg-noise"></div>
+</div>
+<!-- Custom cursor -->
+<div aria-hidden="true" class="cursor" id="cursor"></div>
+<div aria-hidden="true" class="cursor-glow" id="cursorGlow"></div>
+<!-- Scroll progress -->
+<div aria-hidden="true" class="scroll-progress"><span id="scrollProgress"></span></div>
+<!-- Fixed elegant watermark -->
+<div aria-hidden="true" class="watermark">آکادمی جهان پرامپت</div>
+<!-- ══════════════ NAVIGATION ══════════════ -->
+<header class="nav glass" id="nav">
+<a class="nav__brand" data-nav="" href="#hero">
+<span aria-hidden="true" class="nav__logo">✦</span>
+<span class="nav__title">آرشیو تشییع</span>
+</a>
+<nav aria-label="ناوبری اصلی" class="nav__links" id="navLinks">
+<a class="is-active" data-nav="" href="#hero">خانه</a>
+<a data-nav="" href="#story">روایت</a>
+<a data-nav="" href="#gallery">مجموعه</a>
+<a data-nav="" href="#footer">درباره</a>
+</nav>
+<div class="nav__actions">
+<button aria-label="تغییر پوسته" class="btn btn--icon" id="themeToggle" title="پوسته روشن/تیره">
+<svg class="icon-sun" viewbox="0 0 24 24"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.5 4.5l2 2M17.5 17.5l2 2M19.5 4.5l-2 2M6.5 17.5l-2 2"></path></svg>
+<svg class="icon-moon" viewbox="0 0 24 24"><path d="M21 13A9 9 0 1 1 11 3a7 7 0 0 0 10 10z"></path></svg>
+</button>
+<button aria-expanded="false" aria-label="منو" class="btn btn--icon nav__burger" id="burger">
+<span></span><span></span><span></span>
+</button>
+</div>
+</header>
+<main id="main">
+<!-- ══════════════ HERO ══════════════ -->
+<section class="hero" id="hero">
+<div aria-hidden="true" class="hero__halo"></div>
+<p class="hero__eyebrow reveal">نمایشگاه دیجیتالِ ماندگار</p>
+<h1 class="hero__title reveal" data-split="">آرشیو آثار تشییع رهبر شهید</h1>
+<p class="hero__subtitle reveal">روایتی از یک وداع میلیونی، در قاب هنر</p>
+<p class="hero__desc reveal">
+        این مجموعه، گردآوریِ آثار هنری، تصاویر و قاب‌های ماندگارِ آن روزِ تاریخی است؛
+        تجربه‌ای موزه‌ای که با نور، سکوت و حرکت، شما را قدم‌به‌قدم از میان خاطره‌ها عبور می‌دهد.
+      </p>
+<div class="hero__cta reveal">
+<button class="btn btn--primary btn--xl" id="enterBtn">
+<span>ورود به مجموعه</span>
+<svg class="btn__arrow" viewbox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg>
+</button>
+</div>
+<div class="hero__stats reveal">
+<div class="stat"><b data-counter="0" id="statItems">۰</b><span>اثر ثبت‌شده</span></div>
+<div class="stat"><b data-counter="0" id="statCats">۰</b><span>دسته‌بندی</span></div>
+<div class="stat"><b data-counter="0" id="statFeatured">۰</b><span>اثر برگزیده</span></div>
+</div>
+<div aria-hidden="true" class="hero__scrollhint"><span></span></div>
+</section>
+<!-- ══════════════ STORY / NARRATIVE ══════════════ -->
+<section class="story" id="story">
+<div aria-hidden="true" class="section-divider"><span>✦</span></div>
+<h2 class="section-title reveal">روایتِ یک وداع</h2>
+<div class="story__grid">
+<article class="story__card glass reveal">
+<div class="story__icon">🕯️</div>
+<h3>سکوت</h3>
+<p>لحظه‌هایی که واژه‌ها کم می‌آورند؛ قاب‌هایی از سکوتِ باشکوهِ یک ملت.</p>
+</article>
+<article class="story__card glass reveal">
+<div class="story__icon">🌊</div>
+<h3>دریای جمعیت</h3>
+<p>تصاویری از موجِ بی‌پایان انسان‌ها؛ هنرِ ثبتِ عظمت در یک قاب.</p>
+</article>
+<article class="story__card glass reveal">
+<div class="story__icon">🖋️</div>
+<h3>خوش‌نویسی و نور</h3>
+<p>آثاری که خط، نور و رنگ را به زبانِ احترام و اندوه بدل کرده‌اند.</p>
+</article>
+</div>
+</section>
+<!-- ══════════════ GALLERY ══════════════ -->
+<section class="gallery" id="gallery">
+<div aria-hidden="true" class="section-divider"><span>✦</span></div>
+<h2 class="section-title reveal">مجموعهٔ آثار</h2>
+<!-- Toolbar: search / sort -->
+<div class="toolbar glass reveal">
+<div class="field field--search">
+<svg viewbox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>
+<input aria-label="جستجو" id="searchInput" placeholder="جستجو در عنوان، توضیح، پرامپت و برچسب‌ها…" type="search"/>
+</div>
+<select aria-label="مرتب‌سازی" class="field field--select" id="sortSelect">
+<option value="newest">جدیدترین</option>
+<option value="oldest">قدیمی‌ترین</option>
+<option value="az">عنوان (الف تا ی)</option>
+<option value="za">عنوان (ی تا الف)</option>
+<option value="featured">برگزیده‌ها</option>
+</select>
+<div aria-label="نوع محتوا" class="toolbar__types" role="group">
+<button class="chip is-active" data-type="all">همه</button>
+<button class="chip" data-type="image">تصاویر</button>
+<button class="chip" data-type="video">ویدیوها</button>
+</div>
+</div>
+<!-- Category chips (rendered by JS) -->
+<div aria-label="دسته‌بندی‌ها" class="chips reveal" id="categoryChips" role="group"></div>
+<!-- Cards grid -->
+<div aria-live="polite" class="grid" id="galleryGrid"></div>
+<!-- Empty state -->
+<div class="empty" hidden="" id="emptyState">
+<div aria-hidden="true" class="empty__art">🔍</div>
+<h3>اثری یافت نشد</h3>
+<p>واژه‌های دیگری را امتحان کنید یا فیلترها را پاک کنید.</p>
+<button class="btn btn--outline" id="clearFilters">پاک‌کردن فیلترها</button>
+</div>
+</section>
+</main>
+<!-- ══════════════ FOOTER ══════════════ -->
+<footer class="footer glass" id="footer">
+<div class="footer__inner">
+<div class="footer__brand">
+<h3>آرشیو آثار تشییع رهبر شهید</h3>
+<p>نمایشگاهی دیجیتال برای ماندگاریِ یک خاطرهٔ جمعی؛ طراحی‌شده با احترام، نور و سکوت.</p>
+</div>
+<div class="footer__links">
+<a data-nav="" href="#hero">خانه</a>
+<a data-nav="" href="#gallery">مجموعه</a>
+<button class="footer__admin" id="adminTrigger" title="ورود مدیریت">مدیریت</button>
+</div>
+<div aria-label="شبکه‌های اجتماعی" class="footer__social">
+<a aria-label="اینستاگرام" href="#">◉</a>
+<a aria-label="تلگرام" href="#">◈</a>
+<a aria-label="یوتیوب" href="#">▣</a>
+</div>
+</div>
+<div class="footer__bar">
+<span>© ۱۴۰۵ — آکادمی جهان پرامپت</span>
+<button class="btn btn--ghost" id="backToTop">بازگشت به بالا ↑</button>
+</div>
+</footer>
+<!-- ══════════════ ARTWORK MODAL ══════════════ -->
+<div aria-hidden="true" aria-modal="true" class="modal" id="viewerModal" role="dialog">
+<div class="modal__backdrop" data-close=""></div>
+<div class="modal__panel glass">
+<button aria-label="بستن" class="modal__close btn btn--icon" data-close="">✕</button>
+<button aria-label="اثر قبلی" class="modal__nav modal__nav--prev btn btn--icon" id="prevItem">‹</button>
+<button aria-label="اثر بعدی" class="modal__nav modal__nav--next btn btn--icon" id="nextItem">›</button>
+<div class="modal__media" id="modalMedia"></div>
+<div class="modal__body">
+<div class="modal__badges" id="modalBadges"></div>
+<h2 id="modalTitle"></h2>
+<p class="modal__desc" id="modalDesc"></p>
+<div class="prompt-box">
+<div class="prompt-box__head">
+<span>پرامپت هوش مصنوعی</span>
+<span class="prompt-box__meta" id="modalPromptMeta"></span>
+</div>
+<pre class="is-collapsed" id="modalPrompt"></pre>
+<div class="prompt-box__foot">
+<button class="btn btn--outline btn--sm" id="togglePrompt">نمایش کامل</button>
+<span class="prompt-box__count" id="promptCount"></span>
+</div>
+</div>
+<dl class="modal__meta" id="modalMeta"></dl>
+<div class="modal__actions">
+<button class="btn btn--primary" id="copyPrompt">📋 کپی پرامپت</button>
+<a class="btn btn--outline" download="" id="downloadBtn">⬇ دانلود</a>
+<button class="btn btn--ghost" id="shareBtn">↗ اشتراک‌گذاری</button>
+</div>
+<div aria-hidden="true" class="modal__watermark">آکادمی جهان پرامپت</div>
+</div>
+</div>
+</div>
+<!-- ══════════════ ADMIN LOGIN ══════════════ -->
+<div aria-hidden="true" aria-modal="true" class="modal modal--sm" id="loginModal" role="dialog">
+<div class="modal__backdrop" data-close=""></div>
+<div class="modal__panel glass login">
+<button aria-label="بستن" class="modal__close btn btn--icon" data-close="">✕</button>
+<div aria-hidden="true" class="login__lock">🔐</div>
+<h2>ورود به بخش مدیریت</h2>
+<p>برای دسترسی به داشبورد، گذرواژه را وارد کنید.</p>
+<form id="loginForm" novalidate="">
+<div class="field field--password">
+<input aria-label="گذرواژه" autocomplete="off" id="passwordInput" placeholder="گذرواژه" type="password"/>
+<button aria-label="نمایش گذرواژه" class="btn btn--icon" id="togglePass" type="button">👁</button>
+</div>
+<p class="field__error" hidden="" id="loginError" role="alert">گذرواژه نادرست است.</p>
+<button class="btn btn--primary btn--block" id="loginBtn" type="submit"><span>ورود</span></button>
+</form>
+</div>
+</div>
+<!-- ══════════════ ADMIN DASHBOARD ══════════════ -->
+<section class="admin" hidden="" id="adminPanel">
+<aside class="admin__side glass">
+<h3 class="admin__brand">✦ داشبورد مدیریت</h3>
+<nav class="admin__nav">
+<button class="is-active" data-admin-view="overview">نمای کلی</button>
+<button data-admin-view="content">مدیریت محتوا</button>
+<button data-admin-view="editor">افزودن اثر جدید</button>
+</nav>
+<button class="btn btn--outline btn--block" id="adminExit">خروج از مدیریت</button>
+</aside>
+<div class="admin__main">
+<!-- Overview -->
+<div class="admin__view" data-view="overview">
+<h2>نمای کلی</h2>
+<div class="admin__stats" id="adminStats"></div>
+<h3 class="admin__subtitle">آخرین آثار</h3>
+<div class="admin__recent" id="adminRecent"></div>
+</div>
+<!-- Content table -->
+<div class="admin__view" data-view="content" hidden="">
+<h2>مدیریت محتوا</h2>
+<div class="toolbar glass">
+<div class="field field--search">
+<svg viewbox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>
+<input aria-label="جستجوی مدیریت" id="adminSearch" placeholder="جستجو در محتوا…" type="search"/>
+</div>
+<select aria-label="فیلتر وضعیت" class="field field--select" id="adminFilter">
+<option value="all">همهٔ وضعیت‌ها</option>
+<option value="published">منتشرشده</option>
+<option value="draft">پیش‌نویس</option>
+<option value="featured">برگزیده</option>
+</select>
+</div>
+<div class="table-wrap glass">
+<table class="table" id="adminTable">
+<thead>
+<tr><th>پیش‌نمایش</th><th>عنوان</th><th>دسته</th><th>وضعیت</th><th>تاریخ</th><th>اقدامات</th></tr>
+</thead>
+<tbody id="adminTableBody"></tbody>
+</table>
+</div>
+</div>
+<!-- Editor -->
+<div class="admin__view" data-view="editor" hidden="">
+<h2 id="editorTitle">افزودن اثر جدید</h2>
+<form class="editor glass" id="editorForm" novalidate="">
+<input id="fId" type="hidden"/>
+<div class="editor__grid">
+<label class="field field--float"><input id="fTitle" placeholder=" " required="" type="text"/><span>عنوان اثر *</span></label>
+<label class="field field--float"><input id="fCategory" list="catList" placeholder=" " required="" type="text"/><span>دسته‌بندی *</span></label>
+<datalist id="catList"></datalist>
+<label class="field field--float"><input id="fAuthor" placeholder=" " type="text"/><span>پدیدآورنده</span></label>
+<label class="field field--float"><input id="fDate" type="date"/><span>تاریخ ایجاد</span></label>
+<label class="field field--float field--wide"><input id="fShort" placeholder=" " required="" type="text"/><span>توضیح کوتاه *</span></label>
+<label class="field field--float field--wide"><textarea id="fDesc" placeholder=" " rows="3"></textarea><span>توضیح کامل</span></label>
+<label class="field field--float field--wide"><textarea id="fPrompt" placeholder=" " rows="4"></textarea><span>پرامپت هوش مصنوعی</span></label>
+<label class="field field--float"><input id="fModel" placeholder=" " type="text"/><span>نام مدل</span></label>
+<label class="field field--float"><input id="fVersion" placeholder=" " type="text"/><span>نسخهٔ مدل</span></label>
+<label class="field field--float field--wide"><input id="fImage" placeholder=" " required="" type="url"/><span>آدرس تصویر اصلی *</span></label>
+<label class="field field--float field--wide"><input id="fVideo" placeholder=" " type="url"/><span>آدرس ویدیو (اختیاری)</span></label>
+<label class="field field--float field--wide"><input id="fTags" placeholder=" " type="text"/><span>برچسب‌ها (با ویرگول جدا کنید)</span></label>
+<label class="switch"><input id="fFeatured" type="checkbox"/><i></i><span>اثر برگزیده</span></label>
+<label class="switch"><input checked="" id="fPublished" type="checkbox"/><i></i><span>انتشار عمومی</span></label>
+</div>
+<p class="field__error" hidden="" id="editorError" role="alert"></p>
+<div class="editor__actions">
+<button class="btn btn--primary" type="submit">انتشار / ذخیره</button>
+<button class="btn btn--outline" id="saveDraft" type="button">ذخیرهٔ پیش‌نویس</button>
+<button class="btn btn--ghost" id="resetForm" type="button">پاک‌کردن فرم</button>
+</div>
+</form>
+</div>
+</div>
+</section>
+<!-- Confirm dialog -->
+<div aria-hidden="true" aria-modal="true" class="modal modal--sm" id="confirmModal" role="alertdialog">
+<div class="modal__backdrop"></div>
+<div class="modal__panel glass confirm">
+<div aria-hidden="true" class="confirm__icon">🗑️</div>
+<h3 id="confirmText">آیا از حذف این اثر مطمئن هستید؟</h3>
+<div class="confirm__actions">
+<button class="btn btn--danger" id="confirmYes">بله، حذف شود</button>
+<button class="btn btn--outline" id="confirmNo">انصراف</button>
+</div>
+</div>
+</div>
+<!-- Toasts -->
+<div aria-live="polite" class="toasts" id="toasts"></div>
+<script src="script.js"></script>
+<script src="script.js"></script></body>
+</html>
