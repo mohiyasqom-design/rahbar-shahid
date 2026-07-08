@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="آرشیو آثار هنری تولیدشده با هوش مصنوعی — تشییع رهبر شهید">
+<title>آرشیو آثار تشییع رهبر شهید</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   1) DESIGN TOKENS — پالت رنگ، سایه، شیشه، حرکت
+============================================================ */
+:root{
+  --bg:#07080c; --bg-2:#0d0f16; --surface:rgba(255,255,255,.045);
+  --surface-2:rgba(255,255,255,.08); --border:rgba(255,255,255,.09);
+  --text:#f2f3f7; --text-2:#9aa1b5; --text-3:#5f6577;
+  --gold:#d4af37; --gold-2:#f5d78a; --accent:#8e7cff; --accent-2:#4dd6c1;
+  --danger:#ff5470; --ok:#3ddc97;
+  --grad-hero:linear-gradient(135deg,#d4af37 0%,#f5d78a 45%,#8e7cff 100%);
+  --shadow-lg:0 30px 80px -20px rgba(0,0,0,.65);
+  --shadow-glow:0 0 60px -12px rgba(212,175,55,.35);
+  --r-lg:22px; --r-md:16px; --r-sm:10px;
+  --ease:cubic-bezier(.22,1,.36,1); --spring:cubic-bezier(.34,1.56,.64,1);
+}
+html[data-theme="light"]{
+  --bg:#f4f2ec; --bg-2:#ffffff; --surface:rgba(20,20,30,.045);
+  --surface-2:rgba(20,20,30,.07); --border:rgba(20,20,30,.1);
+  --text:#191b24; --text-2:#4c5163; --text-3:#8b90a1;
+  --shadow-lg:0 30px 70px -25px rgba(30,25,60,.25);
+  --shadow-glow:0 0 50px -12px rgba(212,175,55,.4);
+}
+
+/* ============================================================
+   2) BASE
+============================================================ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Vazirmatn',system-ui,sans-serif;background:var(--bg);color:var(--text);
+  min-height:100vh;overflow-x:hidden;line-height:1.75;
+  transition:background .5s var(--ease),color .5s var(--ease);
+}
+img,video{max-width:100%;display:block}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,textarea,select{font-family:inherit;color:inherit}
+::selection{background:var(--gold);color:#111}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:6px}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* Custom scrollbar */
+::-webkit-scrollbar{width:10px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:linear-gradient(var(--gold),var(--accent));border-radius:99px}
+
+/* ============================================================
+   3) CINEMATIC BACKGROUND — نور، ذرات، هاله
+============================================================ */
+.bg-scene{position:fixed;inset:0;z-index:-2;overflow:hidden;pointer-events:none}
+.bg-orb{position:absolute;border-radius:50%;filter:blur(120px);opacity:.35;animation:orbFloat 22s ease-in-out infinite alternate}
+.bg-orb.o1{width:55vmax;height:55vmax;background:radial-gradient(circle,#d4af3766,transparent 65%);top:-20%;right:-15%}
+.bg-orb.o2{width:45vmax;height:45vmax;background:radial-gradient(circle,#8e7cff55,transparent 65%);bottom:-15%;left:-10%;animation-delay:-8s}
+.bg-orb.o3{width:35vmax;height:35vmax;background:radial-gradient(circle,#4dd6c144,transparent 65%);top:40%;left:35%;animation-delay:-15s}
+@keyframes orbFloat{
+  0%{transform:translate(0,0) scale(1)}
+  50%{transform:translate(-6vmax,4vmax) scale(1.12)}
+  100%{transform:translate(4vmax,-5vmax) scale(.95)}
+}
+#particles{position:fixed;inset:0;z-index:-1;pointer-events:none}
+.bg-grain{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* ============================================================
+   4) LOADER — صحنه بارگذاری سینمایی
+============================================================ */
+#loader{position:fixed;inset:0;z-index:1000;background:#05060a;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:34px;transition:opacity 1s var(--ease),visibility 1s}
+#loader.done{opacity:0;visibility:hidden}
+.loader-mark{width:110px;height:110px;position:relative;animation:markIn 1.4s var(--spring) both}
+.loader-mark svg{width:100%;height:100%;filter:drop-shadow(0 0 24px rgba(212,175,55,.6))}
+.loader-mark .ring{fill:none;stroke:url(#lgrad);stroke-width:2.5;stroke-dasharray:300;stroke-dashoffset:300;
+  animation:ringDraw 2.2s var(--ease) forwards}
+@keyframes ringDraw{to{stroke-dashoffset:0}}
+@keyframes markIn{from{transform:scale(.5) rotate(-30deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
+.loader-title{font-size:clamp(1.2rem,4vw,1.9rem);font-weight:900;letter-spacing:.5px;
+  background:var(--grad-hero);-webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:fadeUp 1s .4s var(--ease) both}
+.loader-bar{width:min(300px,60vw);height:2px;background:rgba(255,255,255,.1);border-radius:99px;overflow:hidden;
+  animation:fadeUp 1s .6s var(--ease) both}
+.loader-bar i{display:block;height:100%;width:0;background:var(--grad-hero);
+  box-shadow:0 0 16px var(--gold);transition:width .3s var(--ease)}
+.loader-hint{color:#5f6577;font-size:.8rem;animation:fadeUp 1s .8s var(--ease) both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.loader-veil{position:fixed;inset:0;z-index:999;background:var(--grad-hero);transform:scaleY(0);
+  transform-origin:top;pointer-events:none}
+.loader-veil.sweep{animation:veil 1.1s var(--ease) both}
+@keyframes veil{0%{transform:scaleY(0);transform-origin:bottom}45%{transform:scaleY(1);transform-origin:bottom}
+  55%{transform:scaleY(1);transform-origin:top}100%{transform:scaleY(0);transform-origin:top}}
+
+/* ============================================================
+   5) NAVBAR — چسبان و شیشه‌ای
+============================================================ */
+.nav{position:fixed;top:0;right:0;left:0;z-index:100;padding:14px clamp(16px,4vw,44px);
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  transform:translateY(-110%);transition:transform .9s var(--ease),background .4s,box-shadow .4s,padding .4s}
+.nav.show{transform:none}
+.nav.scrolled{background:color-mix(in srgb,var(--bg) 72%,transparent);backdrop-filter:blur(22px) saturate(1.4);
+  -webkit-backdrop-filter:blur(22px) saturate(1.4);border-bottom:1px solid var(--border);padding:9px clamp(16px,4vw,44px)}
+.brand{display:flex;align-items:center;gap:12px;font-weight:900;font-size:1.02rem}
+.brand-icon{width:38px;height:38px;display:grid;place-items:center;border-radius:12px;
+  background:var(--grad-hero);box-shadow:var(--shadow-glow);animation:brandFloat 5s ease-in-out infinite}
+@keyframes brandFloat{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-4px) rotate(3deg)}}
+.nav-actions{display:flex;align-items:center;gap:10px}
+.icon-btn{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:var(--surface);
+  border:1px solid var(--border);backdrop-filter:blur(10px);transition:.35s var(--spring)}
+.icon-btn:hover{transform:translateY(-3px) scale(1.06);border-color:var(--gold);box-shadow:var(--shadow-glow)}
+.icon-btn svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* ============================================================
+   6) HERO
+============================================================ */
+.hero{min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:120px 20px 80px;position:relative;perspective:1200px}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 18px;border-radius:99px;
+  background:var(--surface);border:1px solid var(--border);backdrop-filter:blur(12px);
+  color:var(--text-2);font-size:.82rem;margin-bottom:26px;animation:fadeUp 1s .2s var(--ease) both}
+.hero-badge i{width:7px;height:7px;border-radius:50%;background:var(--gold);
+  box-shadow:0 0 10px var(--gold);animation:pulse 2s infinite}
+@keyframes pulse{50%{opacity:.35;transform:scale(.7)}}
+.hero h1{font-size:clamp(2rem,6.5vw,4.4rem);font-weight:900;line-height:1.35;max-width:15ch;
+  background:linear-gradient(180deg,var(--text) 30%,color-mix(in srgb,var(--text) 55%,transparent));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:heroTitle 1.3s .35s var(--spring) both;text-shadow:0 30px 60px rgba(0,0,0,.4)}
+@keyframes heroTitle{from{opacity:0;transform:translateY(50px) rotateX(25deg);filter:blur(10px)}
+  to{opacity:1;transform:none;filter:blur(0)}}
+.hero h1 .glow{background:var(--grad-hero);-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 26px rgba(212,175,55,.35))}
+.hero p.sub{margin-top:20px;font-size:clamp(.95rem,2vw,1.2rem);color:var(--text-2);max-width:56ch;
+  animation:fadeUp 1s .55s var(--ease) both}
+.hero p.desc{margin-top:10px;font-size:.9rem;color:var(--text-3);max-width:62ch;animation:fadeUp 1s .7s var(--ease) both}
+.cta{margin-top:44px;position:relative;padding:18px 58px;border-radius:99px;font-size:1.08rem;font-weight:700;
+  color:#161308;background:var(--grad-hero);background-size:200% 200%;overflow:hidden;isolation:isolate;
+  box-shadow:var(--shadow-glow),0 20px 45px -18px rgba(212,175,55,.55);
+  transition:transform .4s var(--spring),box-shadow .4s;animation:fadeUp 1s .85s var(--ease) both,ctaGrad 6s ease infinite}
+@keyframes ctaGrad{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.cta::before{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.65) 50%,transparent 60%);
+  transform:translateX(150%);transition:transform .8s var(--ease)}
+.cta:hover{transform:translateY(-5px) scale(1.04);box-shadow:0 0 70px -8px rgba(212,175,55,.6),0 28px 55px -18px rgba(0,0,0,.5)}
+.cta:hover::before{transform:translateX(-150%)}
+.cta:active{transform:translateY(-1px) scale(.98)}
+.hero-stats{display:flex;gap:clamp(24px,6vw,70px);margin-top:64px;animation:fadeUp 1s 1s var(--ease) both;flex-wrap:wrap;justify-content:center}
+.stat{text-align:center}
+.stat b{display:block;font-size:clamp(1.5rem,4vw,2.3rem);font-weight:900;
+  background:var(--grad-hero);-webkit-background-clip:text;background-clip:text;color:transparent}
+.stat span{font-size:.8rem;color:var(--text-3)}
+.scroll-cue{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);width:24px;height:40px;
+  border:2px solid var(--text-3);border-radius:14px;animation:fadeUp 1s 1.3s both}
+.scroll-cue::after{content:"";position:absolute;top:7px;left:50%;width:4px;height:8px;margin-left:-2px;
+  border-radius:4px;background:var(--gold);animation:cue 1.8s infinite}
+@keyframes cue{0%{transform:translateY(0);opacity:1}70%{transform:translateY(13px);opacity:0}100%{opacity:0}}
+
+/* ============================================================
+   7) GALLERY SECTION
+============================================================ */
+.gallery-sec{padding:90px clamp(16px,4vw,44px) 60px;max-width:1440px;margin:0 auto}
+.sec-head{text-align:center;margin-bottom:46px}
+.sec-head h2{font-size:clamp(1.5rem,4vw,2.4rem);font-weight:900}
+.sec-head h2 em{font-style:normal;background:var(--grad-hero);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sec-head p{color:var(--text-2);margin-top:8px;font-size:.92rem}
+
+/* Toolbar: جستجو + فیلتر + مرتب‌سازی */
+.toolbar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:center;margin-bottom:38px;
+  padding:14px;border-radius:var(--r-lg);background:var(--surface);border:1px solid var(--border);
+  backdrop-filter:blur(18px);position:sticky;top:68px;z-index:50}
+.search-box{position:relative;flex:1;min-width:220px;max-width:380px}
+.search-box svg{position:absolute;top:50%;right:15px;transform:translateY(-50%);width:17px;height:17px;
+  stroke:var(--text-3);fill:none;stroke-width:2;pointer-events:none}
+.search-box input{width:100%;padding:12px 44px 12px 16px;border-radius:14px;background:var(--surface-2);
+  border:1px solid var(--border);color:var(--text);font-size:.9rem;transition:.3s}
+.search-box input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 4px rgba(212,175,55,.12)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.chip{padding:9px 20px;border-radius:99px;font-size:.83rem;background:var(--surface-2);
+  border:1px solid var(--border);color:var(--text-2);transition:.35s var(--spring)}
+.chip:hover{transform:translateY(-2px);border-color:var(--gold)}
+.chip.on{background:var(--grad-hero);color:#161308;font-weight:700;border-color:transparent;box-shadow:var(--shadow-glow)}
+.sel{padding:11px 16px;border-radius:14px;background:var(--surface-2);border:1px solid var(--border);
+  color:var(--text);font-size:.85rem;cursor:pointer}
+.sel option{background:var(--bg-2);color:var(--text)}
+
+/* Grid + cards سه‌بعدی */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:26px;perspective:1600px}
+.card{position:relative;border-radius:var(--r-lg);overflow:hidden;background:var(--surface);
+  border:1px solid var(--border);backdrop-filter:blur(14px);cursor:pointer;isolation:isolate;
+  transform-style:preserve-3d;transition:transform .5s var(--spring),box-shadow .5s,border-color .5s;
+  opacity:0;transform:translateY(46px)}
+.card.inview{opacity:1;transform:none;transition:opacity .8s var(--ease),transform .8s var(--ease),box-shadow .5s,border-color .5s}
+.card:hover{border-color:rgba(212,175,55,.45);box-shadow:var(--shadow-lg),var(--shadow-glow)}
+.card .shine{position:absolute;inset:0;z-index:3;pointer-events:none;opacity:0;transition:opacity .4s;
+  background:radial-gradient(500px circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.14),transparent 45%)}
+.card:hover .shine{opacity:1}
+.card-media{position:relative;aspect-ratio:16/10;overflow:hidden;background:var(--bg-2)}
+.card-media img{width:100%;height:100%;object-fit:cover;transition:transform .9s var(--ease),filter .5s}
+.card:hover .card-media img{transform:scale(1.09)}
+.card-media::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.55),transparent 55%)}
+.badge-cat{position:absolute;top:12px;right:12px;z-index:2;padding:5px 14px;border-radius:99px;font-size:.72rem;
+  font-weight:700;color:#fff;background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.25);backdrop-filter:blur(10px)}
+.badge-star{position:absolute;top:12px;left:12px;z-index:2;width:32px;height:32px;border-radius:10px;
+  display:grid;place-items:center;background:linear-gradient(135deg,var(--gold),var(--gold-2));
+  box-shadow:0 0 18px rgba(212,175,55,.6)}
+.badge-star svg{width:16px;height:16px;fill:#161308}
+.play-ind{position:absolute;inset:0;display:grid;place-items:center;z-index:2}
+.play-ind i{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;
+  background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.35);backdrop-filter:blur(8px);
+  transition:.4s var(--spring)}
+.card:hover .play-ind i{transform:scale(1.15);background:rgba(212,175,55,.85)}
+.play-ind svg{width:20px;height:20px;fill:#fff;margin-right:-3px}
+.card-body{padding:20px 22px 22px;transform:translateZ(30px)}
+.card-body h3{font-size:1.06rem;font-weight:800;margin-bottom:6px}
+.card-body .d{font-size:.84rem;color:var(--text-2);display:-webkit-box;-webkit-line-clamp:2;
+  -webkit-box-orient:vertical;overflow:hidden;min-height:2.9em}
+.card-foot{display:flex;align-items:center;justify-content:space-between;margin-top:16px}
+.card-date{font-size:.75rem;color:var(--text-3);display:flex;align-items:center;gap:6px}
+.card-date svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2}
+.view-btn{padding:9px 24px;border-radius:99px;font-size:.83rem;font-weight:700;color:var(--gold);
+  border:1px solid rgba(212,175,55,.5);transition:.35s var(--spring);position:relative;overflow:hidden}
+.view-btn:hover{background:var(--grad-hero);color:#161308;transform:translateY(-2px);box-shadow:var(--shadow-glow)}
+
+/* Skeleton */
+.skel{border-radius:var(--r-lg);overflow:hidden;background:var(--surface);border:1px solid var(--border)}
+.skel .sm{aspect-ratio:16/10}.skel .sl{height:16px;margin:16px 20px;border-radius:8px}
+.skel .sl.short{width:45%}
+.skel .sm,.skel .sl{background:linear-gradient(90deg,var(--surface-2) 25%,var(--border) 50%,var(--surface-2) 75%);
+  background-size:200% 100%;animation:shimmer 1.4s infinite}
+@keyframes shimmer{to{background-position:-200% 0}}
+
+/* Empty / Error states */
+.state-box{grid-column:1/-1;text-align:center;padding:80px 20px;border-radius:var(--r-lg);
+  background:var(--surface);border:1px dashed var(--border)}
+.state-box svg{width:64px;height:64px;stroke:var(--text-3);fill:none;stroke-width:1.4;margin:0 auto 18px;display:block}
+.state-box h3{font-size:1.15rem;margin-bottom:6px}
+.state-box p{color:var(--text-2);font-size:.88rem}
+
+/* ============================================================
+   8) MODAL VIEWER
+============================================================ */
+.modal{position:fixed;inset:0;z-index:200;display:grid;place-items:center;padding:18px;
+  visibility:hidden;opacity:0;transition:.45s var(--ease)}
+.modal.open{visibility:visible;opacity:1}
+.modal-back{position:absolute;inset:0;background:rgba(4,5,9,.78);backdrop-filter:blur(16px)}
+.modal-box{position:relative;width:min(1080px,100%);max-height:92svh;overflow-y:auto;border-radius:26px;
+  background:color-mix(in srgb,var(--bg-2) 88%,transparent);border:1px solid var(--border);
+  box-shadow:var(--shadow-lg);transform:translateY(46px) scale(.94);transition:.55s var(--spring)}
+.modal.open .modal-box{transform:none}
+.modal-media{position:relative;background:#000;border-radius:26px 26px 0 0;overflow:hidden}
+.modal-media img,.modal-media video{width:100%;max-height:62svh;object-fit:contain;background:#000}
+.wm{position:absolute;bottom:14px;left:16px;z-index:5;font-size:.78rem;font-weight:700;letter-spacing:.5px;
+  color:rgba(255,255,255,.5);text-shadow:0 1px 8px rgba(0,0,0,.6);pointer-events:none;user-select:none;
+  padding:5px 12px;border-radius:99px;background:rgba(0,0,0,.22);backdrop-filter:blur(6px)}
+.modal-close{position:absolute;top:14px;left:14px;z-index:6;width:42px;height:42px;border-radius:50%;
+  background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.25);backdrop-filter:blur(8px);
+  display:grid;place-items:center;transition:.3s var(--spring)}
+.modal-close:hover{transform:rotate(90deg) scale(1.08);background:var(--danger)}
+.modal-close svg{width:17px;height:17px;stroke:#fff;stroke-width:2.2;fill:none;stroke-linecap:round}
+.modal-fs{position:absolute;top:14px;right:14px;z-index:6}
+.m-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:6;width:46px;height:46px;border-radius:50%;
+  background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.25);backdrop-filter:blur(8px);
+  display:grid;place-items:center;transition:.3s var(--spring)}
+.m-nav:hover{background:rgba(212,175,55,.85);transform:translateY(-50%) scale(1.1)}
+.m-nav svg{width:18px;height:18px;stroke:#fff;stroke-width:2.2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.m-nav.prev{right:14px}.m-nav.next{left:14px}
+.modal-body{padding:28px clamp(20px,4vw,40px) 36px}
+.modal-body h2{font-size:clamp(1.2rem,3vw,1.7rem);font-weight:900;margin-bottom:4px}
+.m-meta{display:flex;flex-wrap:wrap;gap:14px;color:var(--text-3);font-size:.8rem;margin:8px 0 18px}
+.m-meta span{display:inline-flex;align-items:center;gap:6px}
+.m-meta svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
+.m-desc{color:var(--text-2);font-size:.94rem;margin-bottom:22px}
+.m-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
+.m-tag{font-size:.74rem;padding:5px 14px;border-radius:99px;background:var(--surface-2);
+  border:1px solid var(--border);color:var(--text-2)}
+.prompt-box{position:relative;border-radius:var(--r-md);background:var(--surface);
+  border:1px solid var(--border);padding:20px;margin-bottom:24px;overflow:hidden}
+.prompt-box::before{content:"";position:absolute;inset-inline-start:0;top:0;bottom:0;width:3px;background:var(--grad-hero)}
+.prompt-box h4{font-size:.85rem;color:var(--gold);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.prompt-box h4 svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2}
+.prompt-box pre{white-space:pre-wrap;word-break:break-word;font-size:.85rem;color:var(--text-2);
+  direction:ltr;text-align:left;font-family:'Vazirmatn',monospace;line-height:1.8}
+.m-actions{display:flex;flex-wrap:wrap;gap:12px}
+.a-btn{display:inline-flex;align-items:center;gap:9px;padding:12px 26px;border-radius:99px;font-size:.87rem;
+  font-weight:700;border:1px solid var(--border);background:var(--surface-2);transition:.35s var(--spring)}
+.a-btn:hover{transform:translateY(-3px);border-color:var(--gold);box-shadow:var(--shadow-glow)}
+.a-btn.gold{background:var(--grad-hero);color:#161308;border:none}
+.a-btn svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* Fullscreen viewer */
+.fsview{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.96);display:grid;place-items:center;
+  visibility:hidden;opacity:0;transition:.4s}
+.fsview.open{visibility:visible;opacity:1}
+.fsview img,.fsview video{max-width:96vw;max-height:92svh;object-fit:contain;
+  animation:fsIn .5s var(--spring)}
+@keyframes fsIn{from{transform:scale(.86);opacity:0}}
+
+/* ============================================================
+   9) TOAST
+============================================================ */
+#toasts{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:500;
+  display:flex;flex-direction:column;gap:10px;align-items:center}
+.toast{display:flex;align-items:center;gap:10px;padding:13px 26px;border-radius:99px;font-size:.86rem;font-weight:600;
+  background:color-mix(in srgb,var(--bg-2) 85%,transparent);border:1px solid var(--border);
+  backdrop-filter:blur(18px);box-shadow:var(--shadow-lg);animation:toastIn .5s var(--spring)}
+.toast.out{animation:toastOut .4s var(--ease) forwards}
+.toast i{width:9px;height:9px;border-radius:50%;background:var(--ok);box-shadow:0 0 10px var(--ok)}
+.toast.err i{background:var(--danger);box-shadow:0 0 10px var(--danger)}
+@keyframes toastIn{from{opacity:0;transform:translateY(24px) scale(.9)}}
+@keyframes toastOut{to{opacity:0;transform:translateY(16px) scale(.92)}}
+
+/* ============================================================
+   10) FOOTER + BACK TO TOP
+============================================================ */
+footer{margin-top:70px;padding:56px clamp(16px,4vw,44px) 34px;text-align:center;position:relative;overflow:hidden;
+  border-top:1px solid var(--border);background:linear-gradient(to top,color-mix(in srgb,var(--gold) 5%,transparent),transparent)}
+footer .f-title{font-weight:900;font-size:1.15rem;background:var(--grad-hero);
+  -webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:8px}
+footer p{color:var(--text-3);font-size:.82rem}
+footer .f-line{width:120px;height:2px;margin:20px auto;border-radius:99px;background:var(--grad-hero);
+  animation:lineGlow 3s ease-in-out infinite}
+@keyframes lineGlow{50%{box-shadow:0 0 18px var(--gold);width:180px}}
+#toTop{position:fixed;bottom:24px;inset-inline-end:24px;z-index:90;width:48px;height:48px;border-radius:16px;
+  background:var(--grad-hero);color:#161308;display:grid;place-items:center;box-shadow:var(--shadow-glow);
+  opacity:0;visibility:hidden;transform:translateY(20px);transition:.45s var(--spring)}
+#toTop.show{opacity:1;visibility:visible;transform:none}
+#toTop:hover{transform:translateY(-5px) scale(1.07)}
+#toTop svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+
+/* ============================================================
+   11) ADMIN — ورود و داشبورد
+============================================================ */
+.admin-wrap{min-height:100svh;display:grid;place-items:center;padding:24px}
+.login-card{width:min(430px,100%);padding:44px 38px;border-radius:28px;background:var(--surface);
+  border:1px solid var(--border);backdrop-filter:blur(24px);box-shadow:var(--shadow-lg);
+  text-align:center;animation:loginIn .8s var(--spring) both}
+@keyframes loginIn{from{opacity:0;transform:translateY(40px) scale(.94)}}
+.login-card .lock{width:74px;height:74px;margin:0 auto 22px;border-radius:22px;display:grid;place-items:center;
+  background:var(--grad-hero);box-shadow:var(--shadow-glow);animation:brandFloat 4s ease-in-out infinite}
+.login-card .lock svg{width:32px;height:32px;stroke:#161308;fill:none;stroke-width:2}
+.login-card h2{font-size:1.35rem;font-weight:900;margin-bottom:6px}
+.login-card>p{color:var(--text-2);font-size:.85rem;margin-bottom:26px}
+.f-field{position:relative;margin-bottom:16px;text-align:right}
+.f-field label{display:block;font-size:.78rem;color:var(--text-2);margin-bottom:7px}
+.f-field input,.f-field textarea,.f-field select{width:100%;padding:13px 16px;border-radius:14px;
+  background:var(--surface-2);border:1px solid var(--border);color:var(--text);font-size:.9rem;transition:.3s}
+.f-field input:focus,.f-field textarea:focus,.f-field select:focus{outline:none;border-color:var(--gold);
+  box-shadow:0 0 0 4px rgba(212,175,55,.12)}
+.f-field textarea{min-height:96px;resize:vertical}
+.login-err{display:none;margin:0 0 14px;padding:11px;border-radius:12px;font-size:.82rem;color:var(--danger);
+  background:rgba(255,84,112,.1);border:1px solid rgba(255,84,112,.3)}
+.login-err.show{display:block;animation:shake .5s}
+@keyframes shake{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+.btn-primary{width:100%;padding:14px;border-radius:14px;font-weight:700;font-size:.95rem;
+  background:var(--grad-hero);color:#161308;box-shadow:var(--shadow-glow);transition:.35s var(--spring)}
+.btn-primary:hover{transform:translateY(-3px)}
+.btn-primary:disabled{opacity:.6;cursor:wait;transform:none}
+
+.dash{max-width:1200px;margin:0 auto;padding:110px clamp(14px,3vw,36px) 60px}
+.dash-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;margin-bottom:30px}
+.dash-head h1{font-size:clamp(1.25rem,3vw,1.7rem);font-weight:900}
+.dash-head h1 em{font-style:normal;background:var(--grad-hero);-webkit-background-clip:text;background-clip:text;color:transparent}
+.dash-tools{display:flex;flex-wrap:wrap;gap:10px}
+.d-btn{display:inline-flex;align-items:center;gap:8px;padding:11px 22px;border-radius:14px;font-size:.85rem;
+  font-weight:700;background:var(--surface-2);border:1px solid var(--border);transition:.3s var(--spring)}
+.d-btn:hover{transform:translateY(-2px);border-color:var(--gold)}
+.d-btn.gold{background:var(--grad-hero);color:#161308;border:none}
+.d-btn.red{color:var(--danger);border-color:rgba(255,84,112,.4)}
+.d-btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.d-grid{display:grid;gap:14px}
+.d-item{display:flex;gap:16px;align-items:center;padding:14px;border-radius:var(--r-md);
+  background:var(--surface);border:1px solid var(--border);transition:.3s}
+.d-item:hover{border-color:rgba(212,175,55,.4)}
+.d-item img{width:92px;height:62px;object-fit:cover;border-radius:10px;background:var(--bg-2)}
+.d-item .di-info{flex:1;min-width:0}
+.d-item h4{font-size:.95rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.d-item small{color:var(--text-3);font-size:.75rem}
+.d-item .di-acts{display:flex;gap:8px}
+.editor{border-radius:24px;background:var(--surface);border:1px solid var(--border);
+  backdrop-filter:blur(20px);padding:30px clamp(18px,3vw,34px);margin-bottom:34px;
+  animation:loginIn .5s var(--spring)}
+.editor h3{font-weight:900;margin-bottom:22px;display:flex;align-items:center;gap:10px}
+.editor h3::before{content:"";width:4px;height:22px;border-radius:99px;background:var(--grad-hero)}
+.editor-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px 18px}
+.editor-grid .full{grid-column:1/-1}
+.switch-row{display:flex;align-items:center;gap:12px;padding:12px 4px}
+.switch{position:relative;width:52px;height:28px;border-radius:99px;background:var(--surface-2);
+  border:1px solid var(--border);transition:.35s;flex-shrink:0}
+.switch::after{content:"";position:absolute;top:3px;inset-inline-start:3px;width:20px;height:20px;border-radius:50%;
+  background:var(--text-3);transition:.35s var(--spring)}
+.switch.on{background:var(--grad-hero);border-color:transparent;box-shadow:var(--shadow-glow)}
+.switch.on::after{inset-inline-start:27px;background:#161308}
+.editor-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
+
+@media(max-width:640px){
+  .toolbar{position:static}
+  .m-nav{width:38px;height:38px}
+  .d-item{flex-wrap:wrap}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+
+<!-- پس‌زمینه سینمایی -->
+<div class="bg-scene" aria-hidden="true">
+  <div class="bg-orb o1"></div><div class="bg-orb o2"></div><div class="bg-orb o3"></div>
+</div>
+<canvas id="particles" aria-hidden="true"></canvas>
+<div class="bg-grain" aria-hidden="true"></div>
+
+<!-- بارگذاری سینمایی -->
+<div id="loader" role="status" aria-label="در حال بارگذاری">
+  <div class="loader-mark">
+    <svg viewBox="0 0 100 100">
+      <defs><linearGradient id="lgrad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#d4af37"/><stop offset="1" stop-color="#8e7cff"/>
+      </linearGradient></defs>
+      <circle class="ring" cx="50" cy="50" r="44"/>
+      <path d="M50 26 L58 44 L78 46 L63 59 L67 78 L50 68 L33 78 L37 59 L22 46 L42 44 Z"
+            fill="url(#lgrad)" opacity=".9"/>
+    </svg>
+  </div>
+  <div class="loader-title">آرشیو آثار تشییع رهبر شهید</div>
+  <div class="loader-bar"><i id="loadBar"></i></div>
+  <div class="loader-hint">در حال آماده‌سازی تجربه‌ای سینمایی…</div>
+</div>
+<div class="loader-veil" id="veil" aria-hidden="true"></div>
+
+<!-- ناوبری -->
+<nav class="nav" id="nav" aria-label="ناوبری اصلی">
+  <a href="/" class="brand" style="text-decoration:none;color:inherit">
+    <span class="brand-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="#161308"><path d="M12 2l2.4 5.4L20 8.2l-4.2 3.9L17 18l-5-2.9L7 18l1.2-5.9L4 8.2l5.6-.8z"/></svg>
+    </span>
+    <span>آرشیو آثار</span>
+  </a>
+  <div class="nav-actions">
+    <button class="icon-btn" id="themeBtn" aria-label="تغییر حالت روشن و تاریک">
+      <svg id="iconMoon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/></svg>
+      <svg id="iconSun" viewBox="0 0 24 24" style="display:none"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M2 12h2.5M19.5 12H22M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>
+    </button>
+  </div>
+</nav>
+
+<main id="app"></main>
+
+<footer id="siteFooter" style="display:none">
+  <div class="f-title">آکادمی جهان پرامپت</div>
+  <div class="f-line"></div>
+  <p>آرشیو آثار تشییع رهبر شهید — مجموعه‌ای از آثار هنری تولیدشده با هوش مصنوعی</p>
+  <p style="margin-top:6px">© <span id="year"></span> تمامی حقوق محفوظ است</p>
+</footer>
+
+<button id="toTop" aria-label="بازگشت به بالا">
+  <svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+
+<div id="toasts" aria-live="polite"></div>
+
+<!-- نمایشگر تمام‌صفحه -->
+<div class="fsview" id="fsview" role="dialog" aria-label="نمایش تمام‌صفحه">
+  <button class="modal-close" id="fsClose" aria-label="بستن" style="top:20px;left:20px">
+    <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>
+  </button>
+  <div id="fsContent"></div>
+  <div class="wm">آکادمی جهان پرامپت</div>
+</div>
+
+<!-- مودال مشاهده اثر -->
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="مشاهده اثر">
+  <div class="modal-back" data-close></div>
+  <div class="modal-box">
+    <div class="modal-media" id="mMedia">
+      <button class="modal-close" data-close aria-label="بستن">
+        <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+      <button class="modal-close modal-fs" id="mFs" aria-label="تمام‌صفحه">
+        <svg viewBox="0 0 24 24" style="stroke:#fff;fill:none;stroke-width:2;width:16px;height:16px"><path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5"/></svg>
+      </button>
+      <button class="m-nav prev" id="mPrev" aria-label="اثر قبلی"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>
+      <button class="m-nav next" id="mNext" aria-label="اثر بعدی"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button>
+      <div id="mMediaInner"></div>
+      <div class="wm">آکادمی جهان پرامپت</div>
+    </div>
+    <div class="modal-body">
+      <h2 id="mTitle"></h2>
+      <div class="m-meta">
+        <span><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></svg><b id="mDate"></b></span>
+        <span><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5"/></svg><b id="mAuthor"></b></span>
+        <span><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10"/></svg><b id="mCat"></b></span>
+      </div>
+      <p class="m-desc" id="mDesc"></p>
+      <div class="m-tags" id="mTags"></div>
+      <div class="prompt-box">
+        <h4><svg viewBox="0 0 24 24"><path d="M9 18l-5-6 5-6M15 6l5 6-5 6"/></svg> پرامپت هوش مصنوعی</h4>
+        <pre id="mPrompt"></pre>
+      </div>
+      <div class="m-actions">
+        <button class="a-btn gold" id="mCopy"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg> کپی پرامپت</button>
+        <a class="a-btn" id="mDown" download target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M12 3v12M6 11l6 6 6-6M4 21h16"/></svg> دانلود</a>
+        <button class="a-btn" id="mShare"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 10.7l6.8-4.4M8.6 13.3l6.8 4.4"/></svg> اشتراک‌گذاری</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+"use strict";
+
+/* ==================================================================
+   آرشیو آثار تشییع رهبر شهید — اپلیکیشن سمت کاربر
+   معماری: ماژول‌های کوچک (API / Router / UI / Gallery / Modal / Admin)
+================================================================== */
+
+/* ---------- 0) ابزارهای عمومی ---------- */
+const $  = (s, c = document) => c.querySelector(s);
+const $$ = (s, c = document) => [...c.querySelectorAll(s)];
+const esc = s => String(s ?? "").replace(/[&<>"']/g, m =>
+  ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[m]));
+const uid = () => "itm_" + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+const fmtDate = d => {
+  try { return new Intl.DateTimeFormat("fa-IR", { dateStyle: "long" }).format(new Date(d)); }
+  catch { return d || ""; }
+};
+
+function toast(msg, err = false) {
+  const t = document.createElement("div");
+  t.className = "toast" + (err ? " err" : "");
+  t.innerHTML = "<i></i>" + esc(msg);
+  $("#toasts").appendChild(t);
+  setTimeout(() => { t.classList.add("out"); setTimeout(() => t.remove(), 400); }, 2800);
+}
+
+function toBool(v, fallback = false) {
+  if (v === undefined || v === null || v === "") return fallback;
+  if (typeof v === "boolean") return v;
+  if (typeof v === "number") return v !== 0;
+  const s = String(v).trim().toLowerCase();
+  if (["1", "true", "yes", "on"].includes(s)) return true;
+  if (["0", "false", "no", "off"].includes(s)) return false;
+  return fallback;
+}
+
+function toDateString(v) {
+  const s = String(v ?? "").trim();
+  return /^\d{4}-\d{2}-\d{2}$/.test(s) ? s : new Date().toISOString().slice(0, 10);
+}
+
+function normalizeArray(v) {
+  if (Array.isArray(v)) return v.map(x => String(x ?? "").trim()).filter(Boolean);
+  if (typeof v === "string") {
+    return v.split(/[,،]/).map(x => x.trim()).filter(Boolean);
+  }
+  return [];
+}
+
+/* ---------- 1) API Client ---------- */
+const API = {
+  async request(url, { method = "GET", body, token, headers = {} } = {}) {
+    const init = {
+      method,
+      headers: { ...headers },
+      cache: "no-store",
+    };
+    if (token) init.headers.Authorization = "Bearer " + token;
+    if (body !== undefined) {
+      init.headers["Content-Type"] = "application/json";
+      init.body = JSON.stringify(body);
+    }
+
+    const res = await fetch(url, init);
+    let data = {};
+    try { data = await res.json(); } catch { data = {}; }
+
+    if (!res.ok) {
+      const err = new Error(data.error || "request_failed");
+      err.status = res.status;
+      err.data = data;
+      throw err;
+    }
+    return data;
+  },
+
+  async getPublicGallery() {
+    return this.request("/api/gallery");
+  },
+
+  async getAdminGallery(token, query = {}) {
+    const qs = new URLSearchParams();
+    qs.set("admin", "1");
+    for (const [k, v] of Object.entries(query)) {
+      const value = String(v ?? "").trim();
+      if (value) qs.set(k, value);
+    }
+    return this.request("/api/gallery?" + qs.toString(), { token });
+  },
+
+  async login(password) {
+    return this.request("/api/login", {
+      method: "POST",
+      body: { password },
+    });
+  },
+
+  verify(token) {
+    return this.request("/api/verify", { token });
+  },
+
+  logout(token) {
+    return this.request("/api/logout", { method: "POST", token });
+  },
+
+  createGalleryItem(token, item) {
+    return this.request("/api/gallery", { method: "POST", token, body: item });
+  },
+
+  updateGalleryItem(token, id, item) {
+    return this.request("/api/gallery/" + encodeURIComponent(id), { method: "PUT", token, body: item });
+  },
+
+  deleteGalleryItem(token, id) {
+    return this.request("/api/gallery/" + encodeURIComponent(id), { method: "DELETE", token });
+  }
+};
+
+/* ---------- 2) پس‌زمینه ذرات ---------- */
+(function particles() {
+  const c = $("#particles"), ctx = c.getContext("2d");
+  let W = 0, H = 0, pts = [];
+  const N = matchMedia("(max-width:640px)").matches ? 28 : 60;
+
+  function resize() {
+    W = c.width = innerWidth;
+    H = c.height = innerHeight;
+  }
+  function make() {
+    pts = Array.from({ length: N }, () => ({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      r: Math.random() * 1.6 + 0.4,
+      vx: (Math.random() - 0.5) * 0.22,
+      vy: (Math.random() - 0.5) * 0.22,
+      a: Math.random() * 0.5 + 0.15
+    }));
+  }
+  function tick() {
+    ctx.clearRect(0, 0, W, H);
+    const gold = getComputedStyle(document.documentElement).getPropertyValue("--gold").trim();
+    for (const p of pts) {
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0 || p.x > W) p.vx *= -1;
+      if (p.y < 0 || p.y > H) p.vy *= -1;
+      ctx.globalAlpha = p.a;
+      ctx.fillStyle = gold;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, 7);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(tick);
+  }
+
+  resize(); make(); tick();
+  addEventListener("resize", () => { resize(); make(); });
+})();
+
+/* ---------- 3) بارگذاری سینمایی ---------- */
+function runLoader(then) {
+  const bar = $("#loadBar");
+  let p = 0;
+
+  const iv = setInterval(() => {
+    p = Math.min(100, p + Math.random() * 17);
+    bar.style.width = p + "%";
+    if (p >= 100) {
+      clearInterval(iv);
+      setTimeout(async () => {
+        $("#veil").classList.add("sweep");
+        setTimeout(async () => {
+          try { await then(); }
+          finally {
+            $("#loader").classList.add("done");
+            $("#nav").classList.add("show");
+          }
+        }, 480);
+      }, 350);
+    }
+  }, 160);
+}
+
+/* ---------- 4) تم روشن/تاریک ---------- */
+(function theme() {
+  const saved = localStorage.getItem("theme") || "dark";
+  apply(saved);
+  $("#themeBtn").addEventListener("click", () => {
+    const next = document.documentElement.dataset.theme === "light" ? "dark" : "light";
+    localStorage.setItem("theme", next);
+    apply(next);
+  });
+
+  function apply(t) {
+    document.documentElement.dataset.theme = t;
+    $("#iconMoon").style.display = t === "light" ? "none" : "";
+    $("#iconSun").style.display  = t === "light" ? "" : "none";
+  }
+})();
+
+/* ---------- 5) آیکون‌های SVG مشترک ---------- */
+const ICONS = {
+  cal: '<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>',
+  play:'<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>',
+  star:'<svg viewBox="0 0 24 24"><path d="M12 2l2.4 5.4L20 8.2l-4.2 3.9L17 18l-5-2.9L7 18l1.2-5.9L4 8.2l5.6-.8z"/></svg>',
+  edit:'<svg viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>',
+  trash:'<svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 11v6M14 11v6"/></svg>',
+  empty:'<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 14l2.5 2.5L15 12"/></svg>'
+};
+
+/* ---------- 6) صفحه اصلی + گالری ---------- */
+const Gallery = {
+  state: { q: "", cat: "همه", sort: "new", entered: false, items: [], liveBound: false },
+
+  async load() {
+    const data = await API.getPublicGallery();
+    this.state.items = Array.isArray(data.items) ? data.items : [];
+    return this.state.items;
+  },
+
+  async refresh({ silent = true } = {}) {
+    try {
+      const oldSignature = this.signature();
+      await this.load();
+      if (!$("#app") || !$("#app").querySelector("#gallerySec")) return;
+      if (!silent && oldSignature !== this.signature()) toast("محتوای گالری به‌روزرسانی شد");
+      this.syncStats();
+      this.renderChips();
+      if (!$("#gallerySec").hidden) this.renderGrid();
+    } catch (err) {
+      if (!silent) toast("نوسازی گالری ناموفق بود", true);
+    }
+  },
+
+  signature() {
+    return this.state.items.map(x => `${x.id}:${x.updatedAt || x.date || ""}:${x.published !== false ? 1 : 0}`).join("|");
+  },
+
+  publishedItems() {
+    return this.state.items.filter(x => x.published !== false);
+  },
+
+  categories() {
+    return ["همه", ...new Set(this.publishedItems().map(x => x.category).filter(Boolean))];
+  },
+
+  filtered() {
+    let items = this.publishedItems();
+    const q = this.state.q.trim().toLowerCase();
+    if (q) {
+      items = items.filter(x =>
+        [x.title, x.shortDesc, x.fullDesc, (x.tags || []).join(" "), x.author, x.category]
+          .join(" ")
+          .toLowerCase()
+          .includes(q)
+      );
+    }
+    if (this.state.cat !== "همه") items = items.filter(x => x.category === this.state.cat);
+    items = items.slice().sort((a, b) => {
+      const da = new Date(a.date || 0).getTime();
+      const db = new Date(b.date || 0).getTime();
+      const dateSort = this.state.sort === "new" ? db - da : da - db;
+      if (dateSort !== 0) return dateSort;
+      return (b.featured === true) - (a.featured === true);
+    });
+    return items;
+  },
+
+  syncStats() {
+    const items = this.publishedItems();
+    const vids = items.filter(x => x.type === "video").length;
+    const els = $$(".stat b");
+    if (els.length >= 3) {
+      els[0].dataset.count = items.length;
+      els[1].dataset.count = items.length - vids;
+      els[2].dataset.count = vids;
+      els.forEach(el => {
+        const target = +el.dataset.count;
+        const t0 = performance.now();
+        (function step(t) {
+          const k = Math.min(1, (t - t0) / 900), e = 1 - Math.pow(1 - k, 3);
+          el.textContent = new Intl.NumberFormat("fa-IR").format(Math.round(target * e));
+          if (k < 1) requestAnimationFrame(step);
+        })(t0);
+      });
+    }
+  },
+
+  async renderHome() {
+    try { await this.load(); } catch { this.state.items = []; }
+    const items = this.publishedItems();
+    const vids = items.filter(x => x.type === "video").length;
+
+    $("#app").innerHTML = `
+      <section class="hero">
+        <span class="hero-badge"><i></i> مجموعه‌ی هنری تولیدشده با هوش مصنوعی</span>
+        <h1>آرشیو آثار <span class="glow">تشییع رهبر شهید</span></h1>
+        <p class="sub">روایتی بصری و ماندگار در قاب هنر دیجیتال</p>
+        <p class="desc">این وب‌سایت مجموعه‌ای از تصاویر و ویدیوهای تولیدشده با هوش مصنوعی به‌همراه پرامپت کامل هر اثر را در خود جای داده است.</p>
+        <button class="cta" id="enterBtn">ورود به مجموعه</button>
+        <div class="hero-stats">
+          <div class="stat"><b data-count="${items.length}">0</b><span>اثر</span></div>
+          <div class="stat"><b data-count="${items.length - vids}">0</b><span>تصویر</span></div>
+          <div class="stat"><b data-count="${vids}">0</b><span>ویدیو</span></div>
+        </div>
+        <div class="scroll-cue" aria-hidden="true"></div>
+      </section>
+      <section class="gallery-sec" id="gallerySec" hidden>
+        <div class="sec-head">
+          <h2>گالری <em>آثار</em></h2>
+          <p>برای مشاهده جزئیات و پرامپت هر اثر روی «مشاهده» بزنید</p>
+        </div>
+        <div class="toolbar">
+          <div class="search-box">
+            <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+            <input id="searchInp" type="search" placeholder="جستجو در آثار…" aria-label="جستجو">
+          </div>
+          <div class="chips" id="chips"></div>
+          <select class="sel" id="sortSel" aria-label="مرتب‌سازی">
+            <option value="new">جدیدترین</option><option value="old">قدیمی‌ترین</option>
+          </select>
+        </div>
+        <div class="grid" id="grid" aria-live="polite"></div>
+      </section>`;
+
+    $("#siteFooter").style.display = "";
+    $("#year").textContent = new Intl.DateTimeFormat("fa-IR", { year: "numeric" }).format(new Date());
+
+    this.syncStats();
+
+    $("#enterBtn").addEventListener("click", () => this.enter());
+    $("#searchInp").addEventListener("input", e => { this.state.q = e.target.value; this.renderGrid(); });
+    $("#sortSel").addEventListener("change", e => { this.state.sort = e.target.value; this.renderGrid(); });
+    this.renderChips();
+    this.renderGrid();
+    this.bindLiveUpdates();
+  },
+
+  bindLiveUpdates() {
+    if (this.state.liveBound || typeof EventSource === "undefined") return;
+    this.state.liveBound = true;
+    const es = new EventSource("/api/events");
+    es.addEventListener("gallery-updated", async () => {
+      try {
+        const prev = this.signature();
+        await this.load();
+        if (!$("#app") || !$("#app").querySelector("#gallerySec")) return;
+        if (prev !== this.signature()) {
+          this.syncStats();
+          this.renderChips();
+          if (!$("#gallerySec").hidden) this.renderGrid(true);
+        }
+      } catch {}
+    });
+    es.onerror = () => {
+      // اتصال زنده به‌صورت خودکار توسط EventSource تلاش می‌شود؛ نیازی به مزاحمت بصری نیست.
+    };
+    this.es = es;
+  },
+
+  enter() {
+    const sec = $("#gallerySec");
+    if (!sec) return;
+    sec.hidden = false;
+    $("#grid").innerHTML = Array(6).fill('<div class="skel"><div class="sm"></div><div class="sl"></div><div class="sl short"></div></div>').join("");
+    sec.scrollIntoView({ behavior: "smooth" });
+    setTimeout(() => this.renderGrid(), 650);
+  },
+
+  renderChips() {
+    const chipsEl = $("#chips");
+    if (!chipsEl) return;
+    const cats = this.categories();
+    if (this.state.cat !== "همه" && !cats.includes(this.state.cat)) this.state.cat = "همه";
+    chipsEl.innerHTML = cats.map(c =>
+      `<button class="chip ${c === this.state.cat ? "on" : ""}" data-cat="${esc(c)}">${esc(c)}</button>`
+    ).join("");
+    $$("#chips .chip").forEach(b => b.addEventListener("click", () => {
+      this.state.cat = b.dataset.cat;
+      this.renderChips();
+      this.renderGrid();
+    }));
+  },
+
+  renderGrid(skipObserve) {
+    const grid = $("#grid");
+    if (!grid) return;
+    const items = this.filtered();
+    if (!items.length) {
+      grid.innerHTML = `<div class="state-box">${ICONS.empty}<h3>اثری یافت نشد</h3><p>عبارت جستجو یا فیلتر دسته‌بندی را تغییر دهید.</p></div>`;
+      return;
+    }
+
+    grid.innerHTML = items.map((it, i) => `
+      <article class="card" data-id="${esc(it.id)}" tabindex="0" role="button"
+               aria-label="مشاهده ${esc(it.title)}" style="transition-delay:${Math.min(i * 60, 420)}ms">
+        <div class="shine"></div>
+        <div class="card-media">
+          ${it.featured ? `<span class="badge-star" title="اثر ویژه">${ICONS.star}</span>` : ""}
+          <span class="badge-cat">${esc(it.category || "بدون دسته")}</span>
+          <img loading="lazy" src="${esc(it.preview || it.thumb || it.media)}" alt="${esc(it.title)}" onerror="this.style.opacity=.2">
+          ${it.type === "video" ? `<span class="play-ind"><i>${ICONS.play}</i></span>` : ""}
+        </div>
+        <div class="card-body">
+          <h3>${esc(it.title)}</h3>
+          <p class="d">${esc(it.shortDesc)}</p>
+          <div class="card-foot">
+            <span class="card-date">${ICONS.cal} ${fmtDate(it.date)}</span>
+            <button class="view-btn">مشاهده</button>
+          </div>
+        </div>
+      </article>`).join("");
+
+    if (!skipObserve) {
+      const io = new IntersectionObserver(es => es.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add("inview");
+          io.unobserve(e.target);
+        }
+      }), { threshold: .12 });
+      $$(".card", grid).forEach(c => io.observe(c));
+    } else {
+      $$(".card", grid).forEach(c => c.classList.add("inview"));
+    }
+
+    $$(".card", grid).forEach(card => {
+      card.addEventListener("mousemove", e => {
+        const r = card.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+        card.style.transform = `rotateY(${(x - .5) * 9}deg) rotateX(${(.5 - y) * 9}deg) translateY(-6px)`;
+        card.style.setProperty("--mx", x * 100 + "%");
+        card.style.setProperty("--my", y * 100 + "%");
+      });
+      card.addEventListener("mouseleave", () => card.style.transform = "");
+      const open = () => Modal.open(card.dataset.id, items);
+      card.addEventListener("click", open);
+      card.addEventListener("keydown", e => {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); }
+      });
+    });
+  }
+};
+
+/* ---------- 7) مودال مشاهده اثر ---------- */
+const Modal = {
+  list: [],
+  idx: 0,
+
+  open(id, list) {
+    this.list = list.slice();
+    this.idx = Math.max(0, this.list.findIndex(x => x.id === id));
+    this.render();
+    $("#modal").classList.add("open");
+    document.body.style.overflow = "hidden";
+  },
+
+  close() {
+    $("#modal").classList.remove("open");
+    document.body.style.overflow = "";
+    $("#mMediaInner").innerHTML = "";
+  },
+
+  nav(d) {
+    if (!this.list.length) return;
+    this.idx = (this.idx + d + this.list.length) % this.list.length;
+    this.render();
+  },
+
+  cur() {
+    return this.list[this.idx];
+  },
+
+  render() {
+    const it = this.cur();
+    if (!it) return;
+    $("#mMediaInner").innerHTML = it.type === "video"
+      ? `<video src="${esc(it.media)}" controls playsinline poster="${esc(it.preview || it.thumb || "")}"></video>`
+      : `<img src="${esc(it.media || it.preview)}" alt="${esc(it.title)}">`;
+    $("#mTitle").textContent = it.title;
+    $("#mDate").textContent = fmtDate(it.date);
+    $("#mAuthor").textContent = it.author || "ناشناس";
+    $("#mCat").textContent = it.category || "—";
+    $("#mDesc").textContent = it.fullDesc || it.shortDesc || "";
+    $("#mTags").innerHTML = (it.tags || []).map(t => `<span class="m-tag">${esc(t)}</span>`).join("");
+    $("#mPrompt").textContent = it.prompt || "—";
+    $("#mDown").href = it.media || it.preview || "#";
+  },
+
+  init() {
+    $$("#modal [data-close]").forEach(b => b.addEventListener("click", () => this.close()));
+    $("#mPrev").addEventListener("click", e => { e.stopPropagation(); this.nav(-1); });
+    $("#mNext").addEventListener("click", e => { e.stopPropagation(); this.nav(1); });
+    $("#mCopy").addEventListener("click", async () => {
+      try { await navigator.clipboard.writeText(this.cur()?.prompt || ""); toast("پرامپت کپی شد"); }
+      catch { toast("کپی ناموفق بود", true); }
+    });
+    $("#mShare").addEventListener("click", async () => {
+      const it = this.cur();
+      if (!it) return;
+      const data = { title: it.title, text: it.shortDesc, url: location.origin };
+      try {
+        if (navigator.share) await navigator.share(data);
+        else { await navigator.clipboard.writeText(location.origin); toast("نشانی سایت کپی شد"); }
+      } catch {}
+    });
+    $("#mFs").addEventListener("click", () => {
+      const it = this.cur();
+      if (!it) return;
+      $("#fsContent").innerHTML = it.type === "video"
+        ? `<video src="${esc(it.media)}" controls autoplay playsinline></video>`
+        : `<img src="${esc(it.media || it.preview)}" alt="">`;
+      $("#fsview").classList.add("open");
+    });
+    $("#fsClose").addEventListener("click", () => {
+      $("#fsview").classList.remove("open");
+      $("#fsContent").innerHTML = "";
+    });
+    document.addEventListener("keydown", e => {
+      if ($("#fsview").classList.contains("open") && e.key === "Escape") { $("#fsClose").click(); return; }
+      if (!$("#modal").classList.contains("open")) return;
+      if (e.key === "Escape") this.close();
+      if (e.key === "ArrowRight") this.nav(-1);
+      if (e.key === "ArrowLeft") this.nav(1);
+    });
+  }
+};
+
+/* ---------- 8) پنل مدیریت ---------- */
+const Admin = {
+  token: sessionStorage.getItem("adm_token") || null,
+  state: { q: "", cat: "همه", items: [] },
+
+  async verify() {
+    if (!this.token) return false;
+    try {
+      const r = await API.verify(this.token);
+      return !!(r && r.ok);
+    } catch {
+      this.token = null;
+      sessionStorage.removeItem("adm_token");
+      return false;
+    }
+  },
+
+  async loadList() {
+    const data = await API.getAdminGallery(this.token, { q: this.state.q, category: this.state.cat });
+    this.state.items = Array.isArray(data.items) ? data.items : [];
+    return this.state.items;
+  },
+
+  async logout() {
+    try { await API.logout(this.token); } catch {}
+    this.token = null;
+    sessionStorage.removeItem("adm_token");
+    location.href = "/";
+  },
+
+  renderLogin(errMsg) {
+    $("#app").innerHTML = `
+      <div class="admin-wrap">
+        <form class="login-card" id="loginForm" autocomplete="off">
+          <div class="lock"><svg viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></div>
+          <h2>ورود مدیریت</h2>
+          <p>این بخش مخصوص مدیر سایت است</p>
+          <div class="login-err ${errMsg ? "show" : ""}" id="loginErr">${esc(errMsg || "")}</div>
+          <div class="f-field">
+            <label for="pw">رمز عبور مدیر</label>
+            <input id="pw" type="password" required autofocus autocomplete="current-password">
+          </div>
+          <button class="btn-primary" id="loginBtn" type="submit">ورود</button>
+        </form>
+      </div>`;
+
+    $("#loginForm").addEventListener("submit", async e => {
+      e.preventDefault();
+      const btn = $("#loginBtn");
+      btn.disabled = true;
+      btn.textContent = "در حال بررسی…";
+      try {
+        const data = await API.login($("#pw").value);
+        if (data.ok && data.token) {
+          this.token = data.token;
+          sessionStorage.setItem("adm_token", data.token);
+          toast("خوش آمدید");
+          await this.renderDash();
+        } else {
+          this.showErr("رمز عبور نادرست است.");
+        }
+      } catch (err) {
+        if (err.status === 429) this.showErr("تلاش بیش از حد؛ کمی بعد دوباره امتحان کنید.");
+        else if (err.status === 503) this.showErr("مدیر سایت هنوز متغیر محیطی ADMIN را تنظیم نکرده است.");
+        else this.showErr("ارتباط با سرور برقرار نشد.");
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "ورود";
+      }
+    });
+  },
+
+  showErr(m) {
+    const el = $("#loginErr");
+    el.textContent = m;
+    el.classList.remove("show");
+    void el.offsetWidth;
+    el.classList.add("show");
+  },
+
+  async renderDash() {
+    try { await this.loadList(); } catch { this.state.items = []; }
+    $("#app").innerHTML = `
+      <div class="dash">
+        <div class="dash-head">
+          <h1>داشبورد <em>مدیریت آثار</em></h1>
+          <div class="dash-tools">
+            <button class="d-btn gold" id="newBtn"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg> افزودن اثر جدید</button>
+            <a class="d-btn" href="/" style="text-decoration:none"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8M5 10v10h14V10"/></svg> نمایش سایت</a>
+            <button class="d-btn red" id="logoutBtn"><svg viewBox="0 0 24 24"><path d="M15 12H4M8 8l-4 4 4 4M20 4v16"/></svg> خروج</button>
+          </div>
+        </div>
+        <div id="editorHost"></div>
+        <div class="toolbar" style="position:static;margin-bottom:22px">
+          <div class="search-box">
+            <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+            <input id="aSearch" type="search" placeholder="جستجو در آثار…">
+          </div>
+          <select class="sel" id="aCat"></select>
+        </div>
+        <div class="d-grid" id="dGrid"></div>
+      </div>`;
+
+    $("#newBtn").addEventListener("click", () => this.openEditor(null));
+    $("#logoutBtn").addEventListener("click", () => this.logout());
+    $("#aSearch").addEventListener("input", e => { this.state.q = e.target.value; this.renderList(); });
+    $("#aCat").addEventListener("change", e => { this.state.cat = e.target.value; this.renderList(); });
+    this.renderList();
+  },
+
+  async renderList() {
+    try {
+      await this.loadList();
+    } catch (err) {
+      if (err.status === 401) {
+        sessionStorage.removeItem("adm_token");
+        this.token = null;
+        this.renderLogin("نشست مدیر منقضی شده است.");
+        return;
+      }
+      toast("بارگذاری لیست آثار ناموفق بود", true);
+      return;
+    }
+
+    const cats = ["همه", ...new Set(this.state.items.map(x => x.category).filter(Boolean))];
+    if (!cats.includes(this.state.cat)) this.state.cat = "همه";
+    const catSel = $("#aCat");
+    if (catSel) {
+      catSel.innerHTML = cats.map(c => `<option ${c === this.state.cat ? "selected" : ""}>${esc(c)}</option>`).join("");
+    }
+
+    const q = this.state.q.trim().toLowerCase();
+    let items = this.state.items.slice();
+    if (q) {
+      items = items.filter(x =>
+        [x.title, x.category, x.shortDesc, x.fullDesc, (x.tags || []).join(" "), x.author]
+          .join(" ")
+          .toLowerCase()
+          .includes(q)
+      );
+    }
+    if (this.state.cat !== "همه") items = items.filter(x => x.category === this.state.cat);
+
+    const grid = $("#dGrid");
+    if (!grid) return;
+    grid.innerHTML = items.length ? items.map(it => `
+      <div class="d-item">
+        <img src="${esc(it.preview || it.thumb || it.media || "")}" alt="" loading="lazy" onerror="this.style.opacity=.15">
+        <div class="di-info">
+          <h4>${it.featured ? "★ " : ""}${esc(it.title)} ${it.published === false ? '<small style="color:var(--danger)">(پیش‌نویس)</small>' : ""}</h4>
+          <small>${esc(it.category || "—")} • ${fmtDate(it.date)} • ${it.type === "video" ? "ویدیو" : "تصویر"}</small>
+        </div>
+        <div class="di-acts">
+          <button class="d-btn" data-edit="${esc(it.id)}">${ICONS.edit} ویرایش</button>
+          <button class="d-btn red" data-del="${esc(it.id)}">${ICONS.trash}</button>
+        </div>
+      </div>`).join("")
+      : `<div class="state-box">${ICONS.empty}<h3>هنوز اثری ثبت نشده</h3><p>با دکمه «افزودن اثر جدید» نخستین اثر را منتشر کنید.</p></div>`;
+
+    $$("#dGrid [data-edit]").forEach(b => b.addEventListener("click", () => {
+      const item = this.state.items.find(x => x.id === b.dataset.edit);
+      this.openEditor(item || null);
+    }));
+    $$("#dGrid [data-del]").forEach(b => b.addEventListener("click", async () => {
+      if (!confirm("این اثر برای همیشه حذف شود؟")) return;
+      try {
+        await API.deleteGalleryItem(this.token, b.dataset.del);
+        toast("اثر حذف شد");
+        await this.renderList();
+      } catch (err) {
+        if (err.status === 401) {
+          this.token = null;
+          sessionStorage.removeItem("adm_token");
+          this.renderLogin("نشست مدیر منقضی شده است.");
+        } else {
+          toast("حذف اثر ناموفق بود", true);
+        }
+      }
+    }));
+  },
+
+  openEditor(item) {
+    const it = item || {
+      id: uid(),
+      title: "",
+      category: "",
+      shortDesc: "",
+      fullDesc: "",
+      prompt: "",
+      preview: "",
+      media: "",
+      thumb: "",
+      type: "image",
+      date: new Date().toISOString().slice(0, 10),
+      author: "",
+      tags: [],
+      featured: false,
+      published: true
+    };
+
+    const F = (label, key, ph = "", type = "text", full = false) => `
+      <div class="f-field ${full ? "full" : ""}">
+        <label>${label}</label>
+        <input data-k="${key}" type="${type}" value="${esc(it[key])}" placeholder="${esc(ph)}">
+      </div>`;
+
+    $("#editorHost").innerHTML = `
+      <div class="editor">
+        <h3>${item ? "ویرایش اثر" : "افزودن اثر جدید"}</h3>
+        <div class="editor-grid">
+          ${F("عنوان *", "title", "عنوان اثر")}
+          ${F("دسته‌بندی", "category", "مثلاً: تصویر، ویدیو، پوستر")}
+          <div class="f-field">
+            <label>نوع رسانه</label>
+            <select data-k="type">
+              <option value="image" ${it.type === "image" ? "selected" : ""}>تصویر</option>
+              <option value="video" ${it.type === "video" ? "selected" : ""}>ویدیو</option>
+            </select>
+          </div>
+          ${F("تاریخ ایجاد", "date", "", "date")}
+          ${F("نام سازنده", "author", "نام هنرمند")}
+          ${F("برچسب‌ها (با ویرگول جدا کنید)", "_tags", "هوش مصنوعی, سینمایی")}
+          ${F("آدرس تصویر پیش‌نمایش (Preview URL)", "preview", "https://…", "url", true)}
+          ${F("آدرس فایل اصلی — تصویر یا ویدیو (Media URL)", "media", "https://…", "url", true)}
+          ${F("آدرس بندانگشتی (Thumbnail URL)", "thumb", "https://…", "url", true)}
+          <div class="f-field full"><label>توضیح کوتاه</label><textarea data-k="shortDesc" style="min-height:64px">${esc(it.shortDesc)}</textarea></div>
+          <div class="f-field full"><label>توضیح کامل</label><textarea data-k="fullDesc">${esc(it.fullDesc)}</textarea></div>
+          <div class="f-field full"><label>پرامپت هوش مصنوعی</label><textarea data-k="prompt" dir="ltr" style="text-align:left">${esc(it.prompt)}</textarea></div>
+          <div class="switch-row"><button type="button" class="switch ${it.featured ? "on" : ""}" id="swFeat" role="switch" aria-checked="${!!it.featured}"></button><span>اثر ویژه (Featured)</span></div>
+          <div class="switch-row"><button type="button" class="switch ${it.published !== false ? "on" : ""}" id="swPub" role="switch" aria-checked="${it.published !== false}"></button><span>انتشار عمومی</span></div>
+        </div>
+        <div class="editor-actions">
+          <button class="d-btn gold" id="saveBtn"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg> ${item ? "ذخیره تغییرات" : "انتشار اثر"}</button>
+          <button class="d-btn" id="cancelBtn">انصراف</button>
+        </div>
+      </div>`;
+
+    $("#editorHost").scrollIntoView({ behavior: "smooth" });
+    $("#editorHost [data-k=\"_tags\"]").value = (it.tags || []).join(", ");
+
+    $$("#editorHost .switch").forEach(sw => sw.addEventListener("click", () => {
+      sw.classList.toggle("on");
+      sw.setAttribute("aria-checked", sw.classList.contains("on"));
+    }));
+
+    $("#cancelBtn").addEventListener("click", () => $("#editorHost").innerHTML = "");
+    $("#saveBtn").addEventListener("click", async () => {
+      const get = k => $(`#editorHost [data-k="${k}"]`).value.trim();
+      if (!get("title")) return toast("عنوان اثر الزامی است", true);
+      if (!get("media") && !get("preview") && !get("thumb")) return toast("حداقل یک آدرس تصویر/ویدیو وارد کنید", true);
+
+      const payload = {
+        title: get("title"),
+        category: get("category"),
+        type: get("type"),
+        date: get("date") || new Date().toISOString().slice(0, 10),
+        author: get("author"),
+        preview: get("preview"),
+        media: get("media"),
+        thumb: get("thumb"),
+        shortDesc: get("shortDesc"),
+        fullDesc: get("fullDesc"),
+        prompt: get("prompt"),
+        tags: get("_tags").split(/[,،]/).map(s => s.trim()).filter(Boolean),
+        featured: $("#swFeat").classList.contains("on"),
+        published: $("#swPub").classList.contains("on")
+      };
+
+      try {
+        if (item) {
+          await API.updateGalleryItem(this.token, item.id, payload);
+          toast("تغییرات ذخیره شد");
+        } else {
+          await API.createGalleryItem(this.token, payload);
+          toast("اثر منتشر شد");
+        }
+        $("#editorHost").innerHTML = "";
+        await this.renderList();
+      } catch (err) {
+        if (err.status === 401) {
+          this.token = null;
+          sessionStorage.removeItem("adm_token");
+          this.renderLogin("نشست مدیر منقضی شده است.");
+        } else if (err.status === 409) {
+          toast("شناسه اثر تکراری است", true);
+        } else {
+          toast("ذخیره اثر ناموفق بود", true);
+        }
+      }
+    });
+  }
+};
+
+/* ---------- 9) اسکرول، ناوبری، بازگشت به بالا ---------- */
+addEventListener("scroll", () => {
+  $("#nav").classList.toggle("scrolled", scrollY > 40);
+  $("#toTop").classList.toggle("show", scrollY > 500);
+}, { passive: true });
+$("#toTop").addEventListener("click", () => scrollTo({ top: 0, behavior: "smooth" }));
+
+/* ---------- 10) Router — مسیر مخفی /admin ---------- */
+(async function boot() {
+  Modal.init();
+  const isAdmin = location.pathname.replace(/\/+$/, "") === "/admin";
+  runLoader(async () => {
+    if (isAdmin) {
+      (await Admin.verify()) ? await Admin.renderDash() : Admin.renderLogin();
+    } else {
+      await Gallery.renderHome();
+    }
+  });
+})();
+</script>
+
+</body>
+</html>

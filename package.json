@@ -1,0 +1,16 @@
+{
+  "name": "archive-works-gallery",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SQLite-backed gallery archive with hidden admin panel and REST API.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18.17"
+  },
+  "dependencies": {
+    "sqlite3": "^6.0.1"
+  }
+}
