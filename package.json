@@ -11,6 +11,6 @@
     "node": ">=18.17"
   },
   "dependencies": {
-    "sqlite3": "^6.0.1"
+    "better-sqlite3": "^11.3.0"
   }
 }
