@@ -1,0 +1,16 @@
+{
+  "name": "archive-gallery-sqlite",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cinematic gallery with SQLite-backed admin and public REST API.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=20.11.0"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.10.0"
+  }
+}
